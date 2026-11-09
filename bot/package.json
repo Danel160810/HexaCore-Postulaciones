@@ -1,0 +1,19 @@
+{
+  "name": "hexacore-postulaciones-bot",
+  "version": "1.0.0",
+  "description": "Bot de Discord de HexaCore Postulaciones: MDs, roles y sincronización con la web. Creado por HexaCore ft. Danel.",
+  "author": "HexaCore ft. Danel (Discord: danel100816)",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1"
+  }
+}

@@ -1,0 +1,62 @@
+LICENCIA HEXACORE DE USO CON ATRIBUCIÓN · versión 1.0
+
+Copyright (c) 2026 HexaCore ft. Danel (Discord: danel100816)
+Proyecto: HexaCore Postulaciones
+Repositorio original: https://github.com/Danel160810/HexaCore-Postulaciones
+
+Este software (la web, el bot, la base de datos, el diseño y la documentación de
+este repositorio, en adelante "el Software") NO es de dominio público. Su autor
+concede los permisos de esta licencia, y solo esos. Todo lo que no se permite
+expresamente queda reservado al autor.
+
+1. LO QUE PUEDES HACER (gratis)
+   a) Usar el Software para gestionar las postulaciones de tu propia comunidad,
+      servidor u organización.
+   b) Instalarlo y alojarlo donde quieras (Vercel, tu VPS, Discloud…).
+   c) Cambiar la marca: nombre, logos, iconos, colores, textos de bienvenida y
+      categorías/preguntas de los formularios.
+   d) Modificar el código para adaptarlo a tu comunidad, siempre que cumplas los
+      puntos 2 y 3.
+
+2. LO QUE NO PUEDES HACER
+   a) Vender, alquilar o sublicenciar el Software, o versiones modificadas de él,
+      ni incluirlo en un producto o servicio de pago para terceros.
+   b) Publicar, subir o repartir copias del código (modificadas o no) en otros
+      repositorios, webs, tiendas, foros o servidores de Discord, salvo lo que
+      permite el punto 4.
+   c) Presentar el Software, o una parte importante de él, como obra propia, ni
+      decir o dar a entender que lo has creado tú.
+   d) Quitar, cambiar u ocultar este aviso de copyright, esta licencia o los
+      créditos del autor.
+
+3. CRÉDITOS OBLIGATORIOS
+   a) En todas las páginas de la web debe verse el texto
+      "Creado por HexaCore ft. Danel", con su enlace al repositorio original y
+      el contacto de Discord "danel100816", tal y como viene en el pie de página
+      (componente src/components/Creditos.tsx).
+   b) Los mensajes del bot deben mantener el pie
+      "HexaCore Postulaciones · Creado por HexaCore ft. Danel".
+   c) No se considera mantener los créditos esconderlos con estilos (mismo color
+      que el fondo, tamaño ilegible, display:none, opacidad 0…), moverlos a una
+      página aparte o cambiar su texto.
+   d) Los avisos de autoría que hay en los archivos del código deben seguir ahí.
+
+4. FORKS Y CONTRIBUCIONES
+   Puedes hacer un fork en GitHub para instalar el Software según el punto 1 o
+   para proponer mejoras al repositorio original mediante pull requests. Ese
+   fork debe conservar esta licencia y los créditos sin cambios. Al enviar una
+   contribución aceptas que se publique bajo esta misma licencia.
+
+5. SIN GARANTÍA
+   El Software se entrega "tal cual", sin garantías de ningún tipo. El autor no
+   responde de daños, pérdidas de datos ni problemas derivados de su uso. Eres
+   responsable de tus claves, tu base de datos y del cumplimiento de las leyes
+   de protección de datos que te apliquen.
+
+6. FIN DE LA LICENCIA
+   Si incumples cualquiera de estos puntos, pierdes automáticamente el permiso
+   de uso y debes dejar de usar y borrar el Software. El autor podrá pedir la
+   retirada de copias no autorizadas (por ejemplo, mediante avisos DMCA).
+
+¿Quieres un uso que no cubre esta licencia (por ejemplo, comercial o sin los
+créditos)? Pide permiso por escrito al autor: Discord danel100816.

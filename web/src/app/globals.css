@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/* ─── Colores ───────────────────────────────────────────────
+   NO los cambies aquí: se ponen desde src/config/marca.ts
+   (el layout raíz los aplica sobre estos valores por defecto).
+   bedrock    fondo de página          deepslate  tarjetas
+   slab       superficies elevadas     seam       bordes
+   fog        texto secundario         bone       texto principal
+   acento     color principal          acento-oscuro  sombra del acento
+   ─────────────────────────────────────────────────────────── */
+@theme {
+  --color-bedrock: #050807;
+  --color-deepslate: #0c1310;
+  --color-slab: #121b17;
+  --color-seam: #213029;
+  --color-fog: #8c9e94;
+  --color-bone: #e4eee8;
+  --color-acento: #4fdc86;
+  --color-acento-oscuro: #17633a;
+  --color-amber: #f3b54a;
+  --color-sky: #74b9f0;
+  --color-ember: #ef6b5b;
+
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.25, 1);
+
+  /* Nuevos Keyframes y Animaciones incorporados */
+  --keyframes-pulse-glow: {
+    0%, 100%: { opacity: 0.4; transform: scale(1); };
+    50%: { opacity: 0.8; transform: scale(1.05); };
+  };
+  --keyframes-shimmer: {
+    100%: { transform: translateX(100%); };
+  };
+  --keyframes-fade-up: {
+    from: { opacity: 0; transform: translateY(12px); };
+    to: { opacity: 1; transform: translateY(0); };
+  };
+
+  --animation-pulse-glow: pulse-glow 4s ease-in-out infinite;
+  --animation-shimmer: shimmer 2.5s infinite;
+  --animation-fade-up: fade-up 0.4s var(--ease-snap) forwards;
+}
+
+@theme inline {
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), var(--font-body), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-code), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-bedrock);
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    min-height: 100dvh;
+    /* Fondo con doble resplandor ambiental para dar profundidad */
+    background:
+      radial-gradient(55rem 35rem at 80% -10%, color-mix(in oklab, var(--color-acento) 8%, transparent), transparent 70%),
+      radial-gradient(40rem 25rem at 10% 110%, color-mix(in oklab, var(--color-acento-oscuro) 15%, transparent), transparent 60%),
+      var(--color-bedrock);
+    color: var(--color-bone);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Barra de scroll */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bedrock);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-seam);
+    border-radius: 4px;
+    border: 2px solid var(--color-bedrock);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-fog);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-acento) 35%, transparent);
+    color: var(--color-bone);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-acento);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display-face), var(--font-body), ui-sans-serif, sans-serif;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ─── Utilidades propias y Efectos Visuales ────────────────── */
+
+/* Panel con esquinas biseladas (arriba-izquierda y abajo-derecha) */
+@utility chamfer {
+  clip-path: polygon(
+    var(--cut, 14px) 0,
+    100% 0,
+    100% calc(100% - var(--cut, 14px)),
+    calc(100% - var(--cut, 14px)) 100%,
+    0 100%,
+    0 var(--cut, 14px)
+  );
+}
+@utility chamfer-sm {
+  --cut: 8px;
+}
+
+/* Hexágono de punta arriba */
+@utility hex {
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+/* Efecto Vidrio / Glassmorphism */
+@utility glass {
+  background: color-mix(in oklab, var(--color-deepslate) 75%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in oklab, var(--color-seam) 80%, transparent);
+}
+
+/* Gradientes de Texto (para títulos destacados) */
+@utility text-gradient-acento {
+  background: linear-gradient(135deg, var(--color-bone) 30%, var(--color-acento) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Campos de Formulario / Inputs */
+@utility field {
+  @apply w-full rounded-md border border-seam bg-slab px-3.5 py-2.5 text-[15px] text-bone outline-none transition-all duration-200 placeholder:text-fog/60 focus:border-acento/60 focus:ring-2 focus:ring-acento/15 focus:bg-deepslate;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-medium text-bone;
+}
+@utility hint {
+  @apply mt-1 text-xs text-fog;
+}
+
+/* Botones */
+@utility btn {
+  @apply relative overflow-hidden inline-flex cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition duration-200 select-none active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-acento text-bedrock shadow-[0_0_0_1px_color-mix(in_oklab,var(--color-acento)_40%,transparent),0_8px_24px_-8px_color-mix(in_oklab,var(--color-acento)_55%,transparent)] hover:brightness-110 hover:shadow-[0_0_20px_color-mix(in_oklab,var(--color-acento)_40%,transparent)];
+}
+@utility btn-ghost {
+  @apply btn border border-seam bg-slab/60 text-bone hover:border-fog/40 hover:bg-slab hover:text-white;
+}
+@utility btn-danger {
+  @apply btn border border-ember/40 bg-ember/10 text-ember hover:bg-ember/20 hover:border-ember/60;
+}
+
+/* Fondo de Panal Animado */
+.honeycomb {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16z M28 64v33' fill='none' stroke='%23ffffff' stroke-opacity='.035'/%3E%3C/svg%3E");
+  background-size: 56px 97px;
+}
+
+/* Animación de entrada suave para páginas y componentes */
+.animate-fade-up {
+  animation: var(--animation-fade-up);
+}
+
+/* Keyframes reales (las de @theme de arriba no generan @keyframes) */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+
+/* Reducción de movimiento para accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

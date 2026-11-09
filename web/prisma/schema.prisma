@@ -1,0 +1,200 @@
+// HexaCore Postulaciones · creado por HexaCore ft. Danel (ver LICENSE)
+// Base de datos PostgreSQL. Aplica cambios con `npx prisma db push`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Variables que crea sola la integración Supabase ↔ Vercel (o ponlas a mano, ver .env.example)
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum QuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  TRUE_FALSE
+  SINGLE_CHOICE
+}
+
+enum MediaKind {
+  NONE
+  IMAGE
+  YOUTUBE
+  VIMEO
+}
+
+enum ApplicationStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+
+enum OutboxStatus {
+  PENDING
+  PROCESSING
+  DONE
+  FAILED
+}
+
+/// Usuario de Discord. El id ES el snowflake de Discord.
+model User {
+  id            String   @id
+  username      String
+  globalName    String?
+  avatar        String?
+  /// IDs de roles del servidor (se refrescan al iniciar sesión, por el bot y por REST)
+  roles         String[]
+  inGuild       Boolean  @default(true)
+  rolesSyncedAt DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  applications Application[]      @relation("Applicant")
+  decisions    Application[]      @relation("Reviewer")
+  comments     InternalComment[]
+  events       ApplicationEvent[]
+}
+
+/// Una categoría de postulación con su examen (Staff, Beta Tester, Dev…)
+model Form {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  /// Etiqueta corta: "Staff", "Dev", "QA", "Media"
+  tag            String
+  summary        String
+  /// Texto que se muestra antes de empezar el examen
+  intro          String?
+  /// Prefijo de referencia: "ST" → #ST-2026-0001
+  refPrefix      String
+  isOpen         Boolean  @default(false)
+  closedNote     String?
+  /// Días de espera tras un rechazo antes de volver a postular
+  cooldownDays   Int      @default(2)
+  /// Rol que el bot da al aprobar (opcional)
+  acceptedRoleId String?
+  /// Rol necesario para poder postular (opcional, además de MEMBER_ROLE_ID)
+  requiredRoleId String?
+  position       Int      @default(0)
+  archived       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  questions    Question[]
+  applications Application[]
+}
+
+model Question {
+  id        String       @id @default(cuid())
+  formId    String
+  form      Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
+  position  Int
+  type      QuestionType
+  title     String
+  help      String?
+  required  Boolean      @default(true)
+  minLength Int?
+  maxLength Int?
+  /// Opciones para SINGLE_CHOICE
+  options   String[]
+  /// Respuesta correcta (auto-corrección): "true"/"false" o el texto de la opción
+  correct   String?
+  mediaKind MediaKind    @default(NONE)
+  mediaUrl  String?
+
+  @@index([formId, position])
+}
+
+model Application {
+  id           String            @id @default(cuid())
+  /// Referencia visible: ST-2026-0003
+  reference    String            @unique
+  userId       String
+  user         User              @relation("Applicant", fields: [userId], references: [id])
+  formId       String
+  form         Form              @relation(fields: [formId], references: [id])
+  status       ApplicationStatus @default(PENDING)
+  /// Copia de preguntas + respuestas en el momento del envío.
+  /// Así editar el formulario después no rompe postulaciones antiguas.
+  answers      Json
+  score        Int?
+  maxScore     Int?
+  /// Mensaje público para el postulante (motivo de rechazo / bienvenida)
+  decisionNote String?
+  reviewerId   String?
+  reviewer     User?             @relation("Reviewer", fields: [reviewerId], references: [id])
+  decidedAt    DateTime?
+  cooldownUntil DateTime?
+  /// true si el bot no pudo mandar el último MD (MD cerrados)
+  dmFailed     Boolean           @default(false)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  events   ApplicationEvent[]
+  comments InternalComment[]
+
+  @@index([userId, status])
+  @@index([formId, status])
+  @@index([status, createdAt])
+}
+
+/// Línea de tiempo visible para el postulante
+model ApplicationEvent {
+  id            String            @id @default(cuid())
+  applicationId String
+  application   Application       @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  status        ApplicationStatus
+  actorId       String?
+  actor         User?             @relation(fields: [actorId], references: [id])
+  note          String?
+  createdAt     DateTime          @default(now())
+
+  @@index([applicationId, createdAt])
+}
+
+/// Comentarios internos: solo los ve el staff
+model InternalComment {
+  id            String      @id @default(cuid())
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  authorId      String
+  author        User        @relation(fields: [authorId], references: [id])
+  body          String
+  createdAt     DateTime    @default(now())
+
+  @@index([applicationId, createdAt])
+}
+
+/// Bandeja de salida para el bot (patrón outbox): la web escribe aquí y
+/// el bot recoge los eventos con GET /api/bot/outbox.
+model OutboxEvent {
+  id          String       @id @default(cuid())
+  type        String
+  payload     Json
+  status      OutboxStatus @default(PENDING)
+  attempts    Int          @default(0)
+  lockedUntil DateTime?
+  lastError   String?
+  createdAt   DateTime     @default(now())
+  processedAt DateTime?
+
+  @@index([status, createdAt])
+}
+
+/// Contadores para las referencias (#ST-2026-0001)
+model Counter {
+  key   String @id
+  value Int
+}
+
+/// Límite de intentos por clave (usuario o IP). Lo gestiona la función SQL rate_hit() de prisma/setup.sql.
+model RateLimit {
+  key         String   @id
+  windowStart DateTime
+  count       Int
+}
