@@ -9,6 +9,12 @@ El staff revisa, comenta y decide desde un panel. Tú solo pones tu nombre, tu l
 
 **Creado por HexaCore ft. Danel** · Discord: `danel100816`
 
+### 🎬 Tutorial en vídeo: configúralo en 20 minutos
+
+[![Ver el tutorial en YouTube](docs/tutorial-miniatura.jpg)](https://youtu.be/ZO3gBsXz8hM)
+
+**[▶ Ver el tutorial en YouTube](https://youtu.be/ZO3gBsXz8hM)** · ⭐ Si te sirve, deja una estrella al repo
+
 </div>
 
 ---
@@ -47,6 +53,8 @@ HexaCore-Postulaciones/
 ```
 
 ## Puesta en marcha (unos 20 minutos)
+
+> 🎬 ¿Prefieres verlo? Todo este apartado está explicado en el [vídeo tutorial](https://youtu.be/ZO3gBsXz8hM).
 
 ### 1. Tu marca
 1. Edita `web/src/config/marca.ts`: nombre, textos de la portada y colores.
