@@ -129,7 +129,7 @@ Este proyecto **no es de dominio público**. Usa la [Licencia HexaCore de Uso co
 - ❌ **No** puedes venderlo, republicarlo en otros sitios ni presentarlo como obra tuya.
 - 🔒 **Créditos obligatorios**: el pie "Creado por HexaCore ft. Danel" de la web y el de los mensajes del bot no se pueden quitar, ocultar ni cambiar. La compilación comprueba que siguen ahí.
 
-¿Necesitas otro tipo de uso? Escríbeme por Discord: **`danel100816`**.
+¿Necesitas otro tipo de uso? Escríbeme por Discord: **`danel100816`**, o a traves de **`https://discord.gg/5XTgECZvyZ`**.
 
 ---
 
